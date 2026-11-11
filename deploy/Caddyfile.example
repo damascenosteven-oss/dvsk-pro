@@ -1,0 +1,6 @@
+# Copy this file to /etc/caddy/Caddyfile on the server and replace the
+# placeholder locally. Never commit a real domain or public IP.
+https://ppt.example.invalid {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:5000
+}

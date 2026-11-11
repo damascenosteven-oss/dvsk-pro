@@ -1,0 +1,16 @@
+[Unit]
+Description=Delete expired YuLing AI PPT objects
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=yuling-ppt
+Group=yuling-ppt
+WorkingDirectory=/opt/yuling-ai-ppt/current/app
+EnvironmentFile=/etc/yuling-ai-ppt.env
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node dist/ppt-cleanup.js
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict

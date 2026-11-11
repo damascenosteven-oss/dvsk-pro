@@ -1,0 +1,72 @@
+{
+  "name": "@yuling-ai-tech/mini-app",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "build": "node ./scripts/task-runner.mjs build",
+    "dev": "node ./scripts/task-runner.mjs dev",
+    "preinstall": "npx only-allow pnpm",
+    "lint:build": "eslint . --quiet",
+    "start": "node ./scripts/task-runner.mjs start",
+    "test:ppt": "tsx --test src/lib/ppt/*.test.ts",
+    "test:ppt:unit": "tsx --test --test-skip-pattern=\"real Python engine|browser QA\" src/lib/ppt/*.test.ts",
+    "test:portable": "node --test scripts/task-runner.test.mjs scripts/ppt-golden.test.mjs scripts/minimatch-compat.test.mjs && pnpm test:ppt:unit",
+    "test:ppt:golden": "tsx scripts/ppt-golden.ts check",
+    "test:ppt:golden:geometry": "tsx scripts/ppt-golden.ts geometry",
+    "ppt:golden:rebaseline": "tsx scripts/ppt-golden.ts rebaseline --approve-current-visual",
+    "ts-check": "tsc -p tsconfig.json",
+    "validate": "node ./scripts/task-runner.mjs validate"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.958.0",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-slot": "^1.2.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "dotenv": "^17.2.3",
+    "lucide-react": "^0.468.0",
+    "next": "16.4.2",
+    "playwright-core": "1.64.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "tailwind-merge": "^2.6.0",
+    "tw-animate-css": "^1.4.0",
+    "zod": "^4.3.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/pngjs": "^6.0.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "10.13.0",
+    "eslint-plugin-import-x": "4.17.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.13.0",
+    "only-allow": "^1.2.2",
+    "pixelmatch": "^8.0.0",
+    "pngjs": "^7.0.0",
+    "tailwindcss": "^4",
+    "tsup": "9.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5",
+    "typescript-eslint": "8.72.0"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "pnpm": {
+    "overrides": {
+      "postcss": "8.5.31",
+      "minimatch@10.2.6": "11.0.1"
+    },
+    "patchedDependencies": {
+      "eslint-plugin-import-x@4.17.1": "patches/eslint-plugin-import-x@4.17.1.patch"
+    }
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9"
+  }
+}

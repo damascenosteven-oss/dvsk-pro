@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "checker_version": "1.0.0",
+  "checker_sha256": "502ebbbac181494153662d7b08056f8a303a7039af80e18106c1f214c42f5a29",
+  "project": "damascenosteven-oss/YULING-mini-app",
+  "ci_entry": ".github/workflows/engineering-guard.yml",
+  "classes": {},
+  "lifecycle": {
+    "required": true,
+    "effective_at": "2026-10-22T04:50:03.733426+00:00",
+    "grandfathered": {},
+    "issues": {
+      "9": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/9",
+        "approval_source": "Owner explicitly requested implementation of the accepted standalone engineering-guard plan in this Codex conversation on 2026-10-26; no merge or deployment authority.",
+        "plan": "docs/plans/issue-9-engineering-guard.md",
+        "plan_sha256": "53aa1b669e12bdbba341eda76db7280427e04af4216ba288f6fe2a38da5e2577",
+        "adr": "docs/adr/0003-engineering-guard.md",
+        "adr_sha256": "bb59bc220439e93df29d8be6f1e755d3241e7331e25dd7fb12289b4781e99271"
+      },
+      "8": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/8",
+        "approval_source": "Owner approved mobile test deployment preparation on 2026-10-26, then explicitly approved this Issue 8 resume plan on 2026-10-27. Authority: code, tests, local enrollment, Issue branch push and PR; no merge or server deployment.",
+        "plan": "docs/plans/issue-8-mobile-test-release.md",
+        "adr": "docs/adr/0004-mobile-test-release.md",
+        "plan_sha256": "24a637122da996e4fb99be2d69a6d4ed8eb0cfc18d60e384b88203c89ef0a496",
+        "adr_sha256": "0f1c5b9392cc88200849f61364c6423994d34ed6fee280b27dc1865fed175f73"
+      },
+      "12": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/12",
+        "approval_source": "Owner explicitly approved implementation of the release timeout/retry repair plan on 2026-10-27: tests, Issue branch push and PR; after owner merge, verified receiver upgrade only. No automatic merge or deployment.",
+        "plan": "docs/plans/issue-12-release-timeout.md",
+        "adr": "docs/adr/0005-release-transfer-lifecycle.md",
+        "plan_sha256": "90f7f12553cb2e804bcd4a864c55ea91e07adf674ed456dc0dd3c5569199b116",
+        "adr_sha256": "9f2bc3d74350e44cbee04ac3cf44c7f94808b670596a31331322138d6392c33d"
+      },
+      "14": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/14",
+        "approval_source": "Owner explicitly approved the complete three-path bounded probe plan on 2026-10-27: prepare, test, push Issue branch and open PR. Owner alone merges, configures credentials, upgrades server and triggers tests. No production server action or publish authority.",
+        "plan": "docs/plans/issue-14-transfer-probe.md",
+        "adr": "docs/adr/0006-bounded-transfer-probe.md",
+        "plan_sha256": "a72666c5f52a14db0dfb2809a4090857c2818a081c91923936cf35cf53cb0068",
+        "adr_sha256": "baa5c01087adeb4bd620f624a81c8ee2742db805c19d3cbffc696a6738b1f3e7"
+      },
+      "16": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/16",
+        "approval_source": "Owner explicitly approved the mobile-triggered local-build/direct-SSH release plan on 2026-10-27. Git-tracked implementation, tests, Issue-branch push and PR are authorized; owner retains merge, phone-triggered publish and business acceptance.",
+        "plan": "docs/plans/issue-16-local-release-bridge.md",
+        "adr": "docs/adr/0007-local-release-bridge.md",
+        "plan_sha256": "b1d1c0de74485e7c74a2da5756f50d33af0d950d81c0374e4bdf5f1adc2eee2e",
+        "adr_sha256": "2e5ef90c6b48135d94624683a0ced7935b582b2106658c336aa96484491329ef"
+      },
+      "18": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/18",
+        "approval_source": "Owner explicitly approved the verified-source-cache and bounded Git retrieval plan on 2026-10-28. Code, tests, Issue-branch push and PR are authorized; owner retains merge and phone-triggered publish.",
+        "plan": "docs/plans/issue-18-source-cache.md",
+        "plan_sha256": "7d39826cc929b66f383083c2ad133559cbfe7cfcb544da83c64fe961ed25ada7",
+        "adr": "docs/adr/0008-source-cache-for-phone-release.md",
+        "adr_sha256": "3816887f966ed3e5b57688e73dd5b737c8eb311a31a80ff6140f68710b8a9f4f"
+      },
+      "20": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/20",
+        "approval_source": "Owner explicitly approved the pinned runtime cache and relay failure-isolation plan on 2026-10-28, then created Issue 20. Code, tests, Issue branch push and review PR are authorized; owner retains merge and phone-triggered publish.",
+        "plan": "docs/plans/issue-20-runtime-cache.md",
+        "plan_sha256": "df534c8d0b239c2774301cd7837fe552e23894bc2a78d0d7a06aa596fa2cfcf6",
+        "adr": "docs/adr/0009-verified-runtime-cache.md",
+        "adr_sha256": "e02512eae52978574e3bc24657cefd0f732e14ae0e01d7fa9c695bbbb190cd74"
+      },
+      "22": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/22",
+        "approval_source": "Owner explicitly requested implementation of the accepted pnpm dependency prefetch and offline image-install plan on 2026-10-29. Code, tests, Issue branch push and review PR are authorized; owner retains merge and phone-triggered publish.",
+        "plan": "docs/plans/issue-22-pnpm-offline-cache.md",
+        "plan_sha256": "387d4d37007b2229bcde66ea6a40bbac603ead8f5a571d008ac79c48bb59a1de",
+        "adr": "docs/adr/0010-pnpm-offline-release-cache.md",
+        "adr_sha256": "ed90fcb72a9e88a74b5be1c9a7819f839611b32e5de3c2ecb6f4aa133a4a90ef"
+      },
+      "24": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/24",
+        "approval_source": "Owner confirmed the two-stage prepare/publish plan and explicitly requested execution on 2026-10-29. Code, tests, Issue-branch push and review PR authorized. Owner retains merge and actual phone prepare/publish/rollback.",
+        "plan": "docs/plans/issue-24-prepared-release.md",
+        "plan_sha256": "d2dcc5311d59d31704f9c405542de47e07252fb4a8d6959c57e2b148af63efe6",
+        "adr": "docs/adr/0011-prepared-release.md",
+        "adr_sha256": "382bff13e548f9dc9906f646f84352d85de981ae572f2ce7225eab51adc3fc06"
+      },
+      "26": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/26",
+        "approval_source": "Owner explicitly requested implementation of the accepted prepare #12 runtime-permissions and safe-error-reporting plan on 2026-10-29. Code, tests, Issue-branch push and review PR authorized; owner retains merge and actual mobile prepare/publish/rollback. No server action.",
+        "plan": "docs/plans/issue-26-runtime-permissions.md",
+        "plan_sha256": "25080666a81ced515a56ac2e73a9ea4ca5966214b5d633dad40636380e8bcaed"
+      },
+      "28": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/28",
+        "approval_source": "Owner explicitly approved the complete outline-generation and repair plan in Codex on 2026-10-30 and selected standard mode. Authority: Issue worktree code/tests, Issue-branch push and review PR. No merge, server actions, deployment, paid generation or Bocha configuration.",
+        "plan": "docs/plans/issue-28-outline-repair.md",
+        "plan_sha256": "5c52adccf0ef7287332ca892426939db88e9fc7576d7bfbb27c4201da3d2b40b",
+        "adr": "docs/adr/0012-outline-generation-repair.md",
+        "adr_sha256": "04431c156a2c7466f686f12a14bf638e8d1587d47f16ca6c59080e12dc557cd7"
+      },
+      "30": {
+        "plan": "docs/plans/issue-30-admin-model-settings.md",
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/30",
+        "adr": "docs/adr/0013-admin-model-settings.md",
+        "approval_source": "Owner explicitly requested implementation of the complete accepted administrator model settings and search-independent ordinary generation plan in this Codex conversation on 2026-10-30. Code, tests, Issue branch push and review PR authorized. No merge, server operation, deployment or paid generation.",
+        "adr_sha256": "2c71be010c133778381c780d58d58ea0556b30a00d893e79d2fc5ed4738478d9",
+        "plan_sha256": "c144327718272c32fbeb6c0e8af443e1698da75163f49ab0988b36249ed59545"
+      },
+      "32": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/32",
+        "approval_source": "Owner explicitly requested implementation of the complete accepted HTTP failure evidence and reproduction plan on 2026-10-30 in this Codex conversation. Issue worktree, code/tests, Issue branch push and review PR authorized. No deployment, administrator initialization, server changes or paid API calls.",
+        "plan": "docs/plans/issue-32-http-evidence.md",
+        "plan_sha256": "bb859e503aa79f2fd77f0f2b9e2a00cc628349431ab3a067d05247f4db3e7a91"
+      },
+      "34": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/34",
+        "approval_source": "Owner explicitly approved the complete motion-validity product fix plan on 2026-10-31 in this Codex conversation, then confirmed prerequisite PR33 merged. Code/tests, Issue branch push and review PR authorized; no merge, deployment, server actions or paid API calls.",
+        "plan": "docs/plans/issue-34-motion-validity.md",
+        "adr": "docs/adr/0014-motion-validity.md",
+        "plan_sha256": "4e8feddec40668c9d9f80760947ed72334fcb2d6e4491230c4dc17f44c05fc8e",
+        "adr_sha256": "97c0d5f5d50735a200e3522163e345fbcfc60a764fbb057852a0bf28b4c08c0b"
+      },
+      "36": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/36",
+        "approval_source": "Owner explicitly approved implementation of the complete repair, owner-reviewed merge, direct computer deployment and real PPT acceptance plan in this Codex conversation on 2026-10-31. Issue branch code/tests/push/PR authorized. Owner alone merges; server operations only after reviewed merge and approved preconditions; paid model calls limited to three. Owner additionally explicitly approved the minimal ESLint minimatch compatibility patch with regression coverage in the same PR on 2026-10-31; no disabled checks or broad toolchain upgrade.",
+        "plan": "docs/plans/issue-36-minimatch-audit.md",
+        "plan_sha256": "4c99e010abdcb78aba122e3ce634a3eb17f827eac0bccacf5b49714a966aa0ba"
+      },
+      "38": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/38",
+        "approval_source": "Owner-approved end-to-end repair/deploy/real-PPT acceptance plan explicitly authorizes fixing in-scope failures in this round through Issue/worktree/tests/push/PR and owner merge; owner confirmed PR37 merge and continued deployment on 2026-10-31. Actual ranking-layout failure triggers this scoped renderer/QA repair; no auto merge, new model calls, budget increase or unchecked deployment.",
+        "plan": "docs/plans/issue-38-ranking-text-fit.md",
+        "plan_sha256": "d3c55d1b7b9e0b9f07d82058d4d6bc2f0a5b8840fd2aac520626d32dafba6dcf"
+      },
+      "40": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/40",
+        "plan": "docs/plans/issue-40-outline-repair-usage.md",
+        "plan_sha256": "f139b275f338534695e463e73953fc35bafd2c169d6a600065a1ef59d7813d8d",
+        "approval_source": "Owner explicitly approved implementation of the complete outline repair, G-drive current-version backup and exact three-old-backup cleanup plan on 2026-10-31. Code/tests/push/PR authorized; owner alone merges. Only after owner merge: direct deployment and one real outline request, at most two model attempts; no search or extra connection test."
+      },
+      "42": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/42",
+        "plan": "docs/plans/issue-42-combined-outline-feedback.md",
+        "plan_sha256": "d6029f6de352a06fb6455ac33f3b5ee44f5fc3bacced636873b367fa94278b03",
+        "approval_source": "Owner-approved outline repair/deployment plan explicitly authorizes immediate in-scope diagnosis and follow-up code repair via Issue, tests, PR and owner merge after real acceptance fails. This follow-up completes accurate combined schema/Skill repair constraints; no automatic merge, changed model budget or extra paid request."
+      },
+      "44": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/44",
+        "approval_source": "Owner explicitly requested implementation of the complete iPhone Safari lightweight playback plan on 2026-10-31. Code/tests/Issue branch push/PR authorized; owner alone merges. After owner merge, verified direct deployment with G-drive recovery backup authorized; owner performs physical iPhone acceptance. No paid model calls or unrelated cleanup.",
+        "plan": "docs/plans/issue-44-mobile-playback.md",
+        "plan_sha256": "e49e8ca0e178a94cf514ee2610d745d3eec90489a5a505d890d6d8a19be60f5f",
+        "adr": "docs/adr/0015-mobile-playback.md",
+        "adr_sha256": "c6d0452683d25a9fcf93086821bcd88a99dd6d9e7beb9eb5cd44b8fe59e1e71d"
+      },
+      "46": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/46",
+        "plan": "docs/plans/issue-46-playback-evidence.md",
+        "plan_sha256": "b9be0f935162a40a2bedaae489daf0d52d45d13883d03ebe93ea200e9f3d349b",
+        "approval_source": "Owner explicitly approved implementation of the full original-visual playback resource lifecycle plan on 2026-11-01, superseding the lightweight visuals. Reuse Issue 46 and open PR 47; owner alone merges. Post-merge verified direct deployment and physical owner iPhone acceptance. Only the separately authorized unreferenced 0dd932a server image may be removed if needed.",
+        "adr": "docs/adr/0016-playback-resource-lifecycle.md",
+        "adr_sha256": "79258b525561e8f68445c33b2a5c28d878a4dce3bbc7c02d40c3c5b3b5023ffe"
+      },
+      "48": {
+        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/48",
+        "plan": "docs/plans/issue-48-global-playback.md",
+        "plan_sha256": "00bcbe9082fcfe4705826563ec53d904d84705bbf764895c354f4ae2aafddb1d",
+        "approval_source": "Continuation of the owner-approved original-visual playback resource lifecycle plan on 2026-11-01 after PR47 merge/deployment and reported iPhone last-page failure. This follow-up only releases verified invisible global resources and preserves visual/time semantics and strict old-work compatibility. Issue worktree code/tests, Issue-branch push and review PR remain within that approved scope; owner alone merges. No new visual tradeoff, server operation, paid call or unrelated cleanup in this code phase."
+      }
+    }
+  }
+}

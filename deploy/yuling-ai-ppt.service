@@ -1,0 +1,25 @@
+[Unit]
+Description=YuLing AI HTML PPT
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=yuling-ppt
+Group=yuling-ppt
+WorkingDirectory=/opt/yuling-ai-ppt/current/app
+EnvironmentFile=/etc/yuling-ai-ppt.env
+Environment=NODE_ENV=production
+Environment=COZE_PROJECT_ENV=PROD
+Environment=PPT_HOST=127.0.0.1
+Environment=PORT=5000
+ExecStart=/usr/bin/node dist/server.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+
+[Install]
+WantedBy=multi-user.target

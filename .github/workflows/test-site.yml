@@ -1,0 +1,35 @@
+name: PPT test site — prepare, publish or rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: 'prepare：准备版本；publish：发布已准备版本；rollback：回滚上一成功版'
+        required: true
+        type: choice
+        options: [prepare, publish, rollback]
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: ppt-test-server
+  cancel-in-progress: false
+
+jobs:
+  request:
+    if: github.ref == 'refs/heads/main' && github.actor == 'damascenosteven-oss'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 115
+    environment: ppt-test
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Request local workstation release and wait for real result
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OPERATION: ${{ inputs.operation }}
+        run: python3 deploy/test/phone-request.py

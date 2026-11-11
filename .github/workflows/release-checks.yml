@@ -1,0 +1,55 @@
+name: release-checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  release-checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Receiver, rollback and bootstrap boundary tests
+        run: sudo python3 -m unittest discover -s deploy/test -p '*_test.py' -v
+      - name: Verify hash-pinned probe SDK without cloud credentials
+        run: |
+          python3 -m venv "$RUNNER_TEMP/probe-venv"
+          "$RUNNER_TEMP/probe-venv/bin/python" -m pip install --require-hashes -r deploy/test/requirements-probe-build.txt
+          "$RUNNER_TEMP/probe-venv/bin/python" -m pip install --no-build-isolation --require-hashes -r deploy/test/requirements-probe.txt
+          "$RUNNER_TEMP/probe-venv/bin/python" deploy/test/probe-sdk-check.py
+      - name: Actual restricted SSH entry and Docker rollback
+        run: python3 deploy/test/receiver-integration.py --output "$RUNNER_TEMP/receiver-entry"
+      - name: Strict-umask real prepare, final image and permission-fault regression
+        run: python3 deploy/test/strict-prepare-check.py --output "$RUNNER_TEMP/release-check"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: release-check-evidence
+          path: |
+            ${{ runner.temp }}/release-check/result.json
+            ${{ runner.temp }}/release-check/fault/image-check-error.json
+            ${{ runner.temp }}/release-check/state/*-image-check-error.json
+            ${{ runner.temp }}/release-check/state/*-outline-entry.json
+            ${{ runner.temp }}/release-check/http-fault/result.json
+            ${{ runner.temp }}/release-check/http-fault/state/*-image-check-error.json
+            ${{ runner.temp }}/release-check/http-fault/state/*-outline-entry.json
+            ${{ runner.temp }}/release-check/state/prepared-releases/*/packaged-candidate
+            ${{ runner.temp }}/release-check/state/prepared-releases/*/image-memory.txt
+            ${{ runner.temp }}/release-check/state/prepared-releases/*/verification.json
+            ${{ runner.temp }}/release-check/state/prepared-releases/*/outline-entry.json
+            ${{ runner.temp }}/release-check/state/prepared-releases/*/model-settings-mobile.png
+            ${{ runner.temp }}/release-check/state/prepared-releases/*/audits
+            ${{ runner.temp }}/receiver-entry/result.json
+            ${{ runner.temp }}/receiver-entry/prepared-entry.json
+            ${{ runner.temp }}/receiver-entry/probe-entry.json
+            ${{ runner.temp }}/receiver-entry/fixture-docker-errors.log
+          retention-days: 7
+          if-no-files-found: warn
