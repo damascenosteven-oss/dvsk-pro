@@ -7,6 +7,7 @@ import { PassThrough, Writable } from 'node:stream';
 import crypto, { scryptSync } from 'node:crypto';
 import { syncBuiltinESMExports } from 'node:module';
 const scenario = process.env.OUTLINE_FIXTURE_CASE;
+let interrupted = false;
 // Only the synchronous 8-byte motion seed is fixed. Auth, IVs and UUIDs stay native.
 const nativeRandomBytes = crypto.randomBytes;
 if (scenario === 'admin') crypto.randomBytes = function (size, callback) {
@@ -78,7 +79,7 @@ https.request = function (input, options, callback) {
    const key = decodeURIComponent(url.pathname);
    if (options.method === 'PUT') {
     let data = raw;
-    if (key.endsWith('.html')) {
+    if (key.endsWith('.html') && scenario !== 'story') {
      // Simulate an existing COS work: the writer must adapt new output, while
      // the real GET route must adapt the unmodified pinned engine runtime too.
      const html = raw.toString();
@@ -100,6 +101,27 @@ https.request = function (input, options, callback) {
   assert.ok(['/chat/completions', '/v1/chat/completions'].includes(url.pathname));
   const body = JSON.parse(raw.toString());
   if (body.messages[0].content === 'Return only this JSON object: {"ok":true}') { connections++; stats(); respond(200, JSON.stringify({ choices: [{ message: { content: '{"ok":true}' } }] })); return; }
+  if (scenario === 'story') {
+    const request = JSON.parse(body.messages[1].content);
+    let content;
+    if ('pageCount' in request) {
+      content = {title:'投诉协作培训',pages:Array.from({length:request.pageCount},(_,i)=>({
+        chapter:'阶段 '+(Math.floor(i/10)+1),title:'交接 '+(i+1),point:'保留责任人与客户诉求 '+(i+1),visual:'工作单转至处理人',bridge:'延续工单',
+      }))};
+    } else {
+      if(request.plan.pages.length===21 && request.first===11 && !interrupted){
+        interrupted=true;respond(503,'fixture interrupted');return;
+      }
+      content = { scenes: Array.from({length:request.last-request.first+1},(_,n)=>{
+        const page=request.first+n;
+        return {page,background:page%2?'paper':'mist',transition:page===1?'fade':'carry',objects:[
+          {id:'ticket',kind:'text',text:request.plan.pages[page-1].point,x:page%3*6,y:15,w:70,h:42,color:'ink',size:3.2,action:page%2?'travel':'rise',beat:0},
+        ]};
+      })};
+    }
+    console.error('STORY_CALL '+JSON.stringify({count:request.pageCount||request.plan.pages.length,start:request.first||0}));
+    respond(200,JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify(content)}}]}));return;
+  }
   models++; stats(); assert.ok(models <= 2);
   if (scenario === 'admin') { assert.equal(body.model, 'fixture-compatible'); assert.equal(body.max_completion_tokens, 8192); assert.equal('thinking' in body, false); }
   else { assert.equal(body.model, 'deepseek-flash'); assert.equal(body.max_tokens, 8192); assert.deepEqual(body.thinking, { type: 'disabled' }); }

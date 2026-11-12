@@ -24,3 +24,5 @@ jobs:
       - run: pnpm validate
       - run: pnpm test:portable
       - run: pnpm build
+      - name: Generate one creative deck through the actual browser, model and storage fixtures
+        run: node scripts/story-http.mjs

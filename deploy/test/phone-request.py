@@ -9,7 +9,7 @@ import time
 import urllib.request
 
 OWNER = "damascenosteven-oss"
-REPO = "YULING-mini-app"
+REPO = "dvsk-pro"
 BASE = f"https://api.github.com/repos/{OWNER}/{REPO}"
 ENVIRONMENT = "ppt-test-local-relay"
 PREPARE_ENVIRONMENT = "ppt-test-local-prepare"

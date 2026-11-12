@@ -76,7 +76,7 @@ export async function saveDeck(
   code: string,
   html: Buffer,
   title: string,
-  options: { ownerHash?: string; researchStatus?: string; motionProfile?: string; motionDesign?: DeckHistoryItem['motionDesign']; skillId?: PresentationSkillId; skillVersion?: number; skillLabel?: string; now?: number } = {},
+  options: { format?: 'story-v1'; ownerHash?: string; researchStatus?: string; motionProfile?: string; motionDesign?: DeckHistoryItem['motionDesign']; skillId?: PresentationSkillId; skillVersion?: number; skillLabel?: string; now?: number } = {},
 ): Promise<string> {
   const now = options.now ?? Date.now();
   const expiresAt = new Date(now + RETENTION_MS).toISOString();
@@ -91,6 +91,7 @@ export async function saveDeck(
         createdAt: new Date(now).toISOString(),
         expiresAt,
         title: encodeURIComponent(title),
+        ...(options.format ? { format: options.format } : {}),
         ...(options.ownerHash ? { ownerHash: options.ownerHash } : {}),
         ...(options.researchStatus ? { researchStatus: options.researchStatus } : {}),
         ...(options.motionProfile ? { motionProfile: encodeURIComponent(options.motionProfile) } : {}),
@@ -241,7 +242,7 @@ export async function listDeckHistory(ownerHash: string, now = Date.now()): Prom
 }
 
 export type StoredDeck =
-  | { status: 'ok'; html: Uint8Array }
+  | { status: 'ok'; html: Uint8Array; format?: 'story-v1' }
   | { status: 'missing' }
   | { status: 'expired' };
 
@@ -251,7 +252,7 @@ export async function loadDeck(code: string, now = Date.now()): Promise<StoredDe
     const expiresAt = result.Metadata?.expiresat || result.Metadata?.expiresAt;
     if (!expiresAt || new Date(expiresAt).getTime() <= now) return { status: 'expired' };
     if (!result.Body) return { status: 'missing' };
-    return { status: 'ok', html: await result.Body.transformToByteArray() };
+    return { status: 'ok', html: await result.Body.transformToByteArray(), ...(result.Metadata?.format === 'story-v1' ? { format: 'story-v1' as const } : {}) };
   } catch (error) {
     if (isNotFound(error)) return { status: 'missing' };
     throw error;

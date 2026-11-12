@@ -14,7 +14,7 @@ spec.loader.exec_module(phone)
 
 class RequestTests(unittest.TestCase):
     def test_only_owner_main_and_fixed_operation(self):
-        good = {"GITHUB_REPOSITORY": "damascenosteven-oss/YULING-mini-app",
+        good = {"GITHUB_REPOSITORY": "damascenosteven-oss/dvsk-pro",
                 "GITHUB_ACTOR": "damascenosteven-oss", "GITHUB_REF": "refs/heads/main",
                 "GITHUB_SHA": "a" * 40, "GITHUB_RUN_ID": "42",
                 "GITHUB_RUN_ATTEMPT": "1", "OPERATION": "publish"}
@@ -25,7 +25,7 @@ class RequestTests(unittest.TestCase):
                 phone.identity({**good, **changed})
 
     def test_actual_request_entry_waits_for_workstation_result(self):
-        env = {"GITHUB_REPOSITORY": "damascenosteven-oss/YULING-mini-app",
+        env = {"GITHUB_REPOSITORY": "damascenosteven-oss/dvsk-pro",
                "GITHUB_ACTOR": "damascenosteven-oss", "GITHUB_REF": "refs/heads/main",
                "GITHUB_SHA": "a" * 40, "GITHUB_RUN_ID": "42",
                "GITHUB_RUN_ATTEMPT": "1", "OPERATION": "publish", "GITHUB_TOKEN": "fixture"}
@@ -48,7 +48,7 @@ class RequestTests(unittest.TestCase):
         self.assertEqual(phone.api.calls[2][0], "/deployments/8/statuses?per_page=1")
 
     def test_offline_workstation_fails_phone_workflow(self):
-        env = {"GITHUB_REPOSITORY": "damascenosteven-oss/YULING-mini-app",
+        env = {"GITHUB_REPOSITORY": "damascenosteven-oss/dvsk-pro",
                "GITHUB_ACTOR": "damascenosteven-oss", "GITHUB_REF": "refs/heads/main",
                "GITHUB_SHA": "a" * 40, "GITHUB_RUN_ID": "42",
                "GITHUB_RUN_ATTEMPT": "1", "OPERATION": "rollback", "GITHUB_TOKEN": "fixture"}
