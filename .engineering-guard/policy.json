@@ -2,7 +2,7 @@
   "schema": 1,
   "checker_version": "1.0.0",
   "checker_sha256": "502ebbbac181494153662d7b08056f8a303a7039af80e18106c1f214c42f5a29",
-  "project": "damascenosteven-oss/YULING-mini-app",
+  "project": "damascenosteven-oss/dvsk-pro",
   "ci_entry": ".github/workflows/engineering-guard.yml",
   "classes": {},
   "lifecycle": {
@@ -163,6 +163,14 @@
         "plan": "docs/plans/issue-48-global-playback.md",
         "plan_sha256": "00bcbe9082fcfe4705826563ec53d904d84705bbf764895c354f4ae2aafddb1d",
         "approval_source": "Continuation of the owner-approved original-visual playback resource lifecycle plan on 2026-11-01 after PR47 merge/deployment and reported iPhone last-page failure. This follow-up only releases verified invisible global resources and preserves visual/time semantics and strict old-work compatibility. Issue worktree code/tests, Issue-branch push and review PR remain within that approved scope; owner alone merges. No new visual tradeoff, server operation, paid call or unrelated cleanup in this code phase."
+      },
+      "1": {
+        "url": "https://github.com/damascenosteven-oss/dvsk-pro/issues/1",
+        "plan": "docs/plans/issue-1-brand-storyboard.md",
+        "adr": "docs/adr/0017-creative-storyboard.md",
+        "approval_source": "Owner: PLEASE IMPLEMENT THIS PLAN, DVSK Pro, 2026-11-12",
+        "plan_sha256": "c85376a9219360c8f9d799841736d0bafa1076ee08e08ad3154a10166deaabb3",
+        "adr_sha256": "931021fd8d5a5dc1a20d945f1b87be656dc0664e615ba600544bf6e582ce4882"
       }
     }
   }

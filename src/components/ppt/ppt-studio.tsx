@@ -344,7 +344,7 @@ export default function PptStudio() {
   return (
     <main className="min-h-[100dvh] px-[14px] pb-10 pt-5">
       <header className="mb-5 flex items-center justify-between"><div><div className="flex items-center gap-2 whitespace-nowrap"><Logo size={24} /><span className="text-sm font-extrabold">毓灵 YuLing AI</span><span className="h-4 w-px bg-[var(--line-clr)]" /><span className="text-lg font-extrabold">AI PPT</span></div><p className="mt-1 text-xs text-[var(--muted-clr)]">需求 → 大纲 → HTML 放映</p></div><Button variant="ghost" size="sm" onClick={() => { void fetch('/api/ppt/session', { method: 'DELETE' }).then(() => setAuthenticated(false)); }}><LogOut />退出</Button></header>
-      <div className="mb-3 flex justify-end"><Link className="text-sm text-[var(--brand-600)] underline" href="/ppt/settings">模型设置</Link></div>
+      <div className="mb-3 flex items-center justify-between gap-3"><Link className="rounded-lg bg-indigo-700 px-4 py-2 font-bold text-white" href="/ppt/create">创作 6～30 页 PPT</Link><Link className="text-sm text-[var(--brand-600)] underline" href="/ppt/settings">模型设置</Link></div>
       <div className="mb-4 rounded-xl bg-amber-50 p-3 text-xs leading-relaxed text-amber-800">内测环境，请勿输入敏感或保密信息。本次未联网，内容和数据需人工核验。</div>
       {!outline ? <div className="space-y-4">
         <Card className="border-[var(--line-clr)] shadow-none"><CardHeader className="pb-3"><div className="flex items-center justify-between"><CardTitle className="flex items-center gap-2 text-base"><History className="size-4 text-[var(--brand-500)]" />最近生成</CardTitle><span className="text-[11px] text-[var(--muted-clr)]">近 7 天</span></div></CardHeader><CardContent className="space-y-3">

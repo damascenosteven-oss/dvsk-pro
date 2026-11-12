@@ -117,7 +117,7 @@ class ContractTests(unittest.TestCase):
         else: raise AssertionError(args)
 
     def request(self, operation):
-        env = {"GITHUB_REPOSITORY": "damascenosteven-oss/YULING-mini-app", "GITHUB_ACTOR": self.bridge.OWNER,
+        env = {"GITHUB_REPOSITORY": "damascenosteven-oss/dvsk-pro", "GITHUB_ACTOR": self.bridge.OWNER,
                "GITHUB_REF": "refs/heads/main", "GITHUB_SHA": self.sha, "GITHUB_RUN_ID": str(self.api.run),
                "GITHUB_RUN_ATTEMPT": "1", "OPERATION": operation, "GITHUB_TOKEN": "fixture"}
         original = self.api.call
@@ -237,7 +237,7 @@ class ContractTests(unittest.TestCase):
         self.assertTrue((self.state / "prepared-releases" / self.sha / "bundle.tar").exists())
 
     def test_legacy_wrong_owner_expiry_and_changed_main_are_rejected(self):
-        env = {"GITHUB_REPOSITORY": "damascenosteven-oss/YULING-mini-app", "GITHUB_ACTOR": self.bridge.OWNER,
+        env = {"GITHUB_REPOSITORY": "damascenosteven-oss/dvsk-pro", "GITHUB_ACTOR": self.bridge.OWNER,
                "GITHUB_REF": "refs/heads/main", "GITHUB_SHA": self.sha, "GITHUB_RUN_ID": "42", "GITHUB_RUN_ATTEMPT": "1", "OPERATION": "prepare"}
         dep = self.api.call("/deployments", {"ref": self.sha, "environment": self.bridge.PREPARE_ENVIRONMENT,
             "payload": {**self.phone.identity(env), "expires_at": (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat()}})

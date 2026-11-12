@@ -13,7 +13,7 @@ export async function GET(_request: Request, context: { params: Promise<{ code: 
     const deck = await loadDeck(code);
     if (deck.status === 'missing') return NextResponse.json({ error: '未找到课件' }, { status: 404 });
     if (deck.status === 'expired') return NextResponse.json({ error: '课件已过期' }, { status: 410 });
-    return new NextResponse(Buffer.from(adaptMobilePlayback(Buffer.from(deck.html).toString('utf8'))), {
+    return new NextResponse(deck.format === 'story-v1' ? Buffer.from(deck.html) : Buffer.from(adaptMobilePlayback(Buffer.from(deck.html).toString('utf8'))), {
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
         'Cache-Control': 'private, no-store',
