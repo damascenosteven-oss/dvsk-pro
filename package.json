@@ -27,7 +27,7 @@
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
     "lucide-react": "^0.468.0",
-    "next": "16.4.2",
+    "next": "16.4.5",
     "playwright-core": "1.64.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
