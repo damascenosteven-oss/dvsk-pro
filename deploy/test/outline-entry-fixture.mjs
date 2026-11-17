@@ -8,6 +8,7 @@ import crypto, { scryptSync } from 'node:crypto';
 import { syncBuiltinESMExports } from 'node:module';
 const scenario = process.env.OUTLINE_FIXTURE_CASE;
 let interrupted = false;
+let feedbackCall = 0;
 // Only the synchronous 8-byte motion seed is fixed. Auth, IVs and UUIDs stay native.
 const nativeRandomBytes = crypto.randomBytes;
 if (scenario === 'admin') crypto.randomBytes = function (size, callback) {
@@ -120,6 +121,20 @@ https.request = function (input, options, callback) {
       })};
     }
     console.error('STORY_CALL '+JSON.stringify({count:request.pageCount||request.plan.pages.length,start:request.first||0}));
+    if (request.brief?.startsWith('分组格式测试')) {
+      const mode = ++feedbackCall;
+      if (mode === 1) { respond(200, '{}'); return; }
+      if (mode === 2) { respond(200, JSON.stringify({choices:[{message:{content:'{'+marker}}]})); return; }
+      if (mode === 3) content = {};
+      if (mode === 4) content.scenes.pop();
+      if ([5,6,9].includes(mode)) {
+        const item = {...content.scenes[2].objects[0], id:'second'};
+        content.scenes[2].objects.push(item);
+        if (mode === 6) item.action = marker;
+        else delete item.action;
+      }
+      if (mode === 7) for (const scene of content.scenes) scene.objects[0][marker] = marker;
+    }
     respond(200,JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify(content)}}]}));return;
   }
   models++; stats(); assert.ok(models <= 2);
