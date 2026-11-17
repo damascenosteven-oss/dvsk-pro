@@ -13,8 +13,8 @@
       "9": {
         "url": "https://github.com/damascenosteven-oss/dvsk-pro/issues/9",
         "plan": "docs/plans/issue-9-group-feedback.md",
-        "plan_sha256": "05a795066124dd57c225eaf395b619deb7ae37139d353129bae0d6ea5a27d220",
-        "approval_source": "Owner approved the DVSK Pro group format feedback plan and isolation of the legacy Issue 9 receipt in this conversation."
+        "plan_sha256": "22289b5cae9cc560a15ebf693e0c296854fe42158d8c02b454b837e9eb731b73",
+        "approval_source": "Owner approved the DVSK Pro group format feedback plan and isolation of the legacy Issue 9 receipt in this conversation. Owner separately approved the exact Next.js 16.4.5 patch in PR 10."
       },
       "8": {
         "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/8",
