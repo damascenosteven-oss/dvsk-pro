@@ -99,11 +99,34 @@ https.request = function (input, options, callback) {
    else respond(404, '<Error><Code>NoSuchKey</Code></Error>', { 'content-type': 'application/xml' });
    return;
   }
-  assert.ok(['/chat/completions', '/v1/chat/completions'].includes(url.pathname));
+  assert.ok(['/chat/completions', '/v1/chat/completions', '/beta/chat/completions'].includes(url.pathname));
   const body = JSON.parse(raw.toString());
   if (body.messages[0].content === 'Return only this JSON object: {"ok":true}') { connections++; stats(); respond(200, JSON.stringify({ choices: [{ message: { content: '{"ok":true}' } }] })); return; }
   if (scenario === 'story') {
     const request = JSON.parse(body.messages[1].content);
+    const strictGroup = !('pageCount' in request) && url.hostname === 'api.deepseek.com';
+    if (strictGroup) {
+      assert.equal(url.pathname, '/beta/chat/completions');
+      assert.deepEqual(body.thinking,{type:'disabled'});
+      assert.equal(body.response_format,undefined);
+      assert.deepEqual(body.tool_choice,{type:'function',function:{name:'submit_scenes'}});
+      assert.equal(body.tools.length,1);
+      const tool=body.tools[0].function;
+      assert.equal(tool.strict,true);
+      assert.equal(tool.name,'submit_scenes');
+      const scene=tool.parameters.properties.scenes.items;
+      const object=scene.properties.objects.items;
+      for(const level of [tool.parameters,scene,object]){
+        assert.equal(level.additionalProperties,false);
+        assert.deepEqual(level.required.slice().sort(),Object.keys(level.properties).sort());
+      }
+      assert.deepEqual(object.properties.action.enum,['appear','rise','draw','travel','pulse']);
+      assert.deepEqual(scene.properties.transition.enum,['fade','slide','carry']);
+    } else {
+      assert.ok(!url.pathname.startsWith('/beta/'));
+      assert.deepEqual(body.response_format,{type:'json_object'});
+      assert.equal(body.tools,undefined);
+    }
     let content;
     if ('pageCount' in request) {
       content = {title:'投诉协作培训',pages:Array.from({length:request.pageCount},(_,i)=>({
@@ -116,26 +139,41 @@ https.request = function (input, options, callback) {
       content = { scenes: Array.from({length:request.last-request.first+1},(_,n)=>{
         const page=request.first+n;
         return {page,background:page%2?'paper':'mist',transition:page===1?'fade':'carry',objects:[
-          {id:'ticket',kind:'text',text:request.plan.pages[page-1].point,x:page%3*6,y:15,w:70,h:42,color:'ink',size:3.2,action:page%2?'travel':'rise',beat:0},
+          {id:'ticket',kind:'text',text:request.plan.pages[page-1].point,x:page%3*6,y:15,w:70,h:42,color:'ink',size:3.2,action:['appear','rise','draw','travel','pulse'][(page-1)%5],beat:0},
         ]};
       })};
     }
     console.error('STORY_CALL '+JSON.stringify({count:request.pageCount||request.plan.pages.length,start:request.first||0}));
+    const groupChoice=(args)=>({finish_reason:'tool_calls',message:{tool_calls:[
+      {type:'function',function:{name:'submit_scenes',arguments:args}},
+    ]}});
     if (request.brief?.startsWith('分组格式测试')) {
       const mode = ++feedbackCall;
       if (mode === 1) { respond(200, '{}'); return; }
-      if (mode === 2) { respond(200, JSON.stringify({choices:[{message:{content:'{'+marker}}]})); return; }
+      if (mode === 2) { respond(200, JSON.stringify({choices:[strictGroup?groupChoice('{'+marker):{message:{content:'{'+marker}}]})); return; }
       if (mode === 3) content = {};
       if (mode === 4) content.scenes.pop();
       if ([5,6,9].includes(mode)) {
         const item = {...content.scenes[2].objects[0], id:'second'};
         content.scenes[2].objects.push(item);
-        if (mode === 6) item.action = marker;
+        if (mode === 6) {
+          item.action=marker;
+          content.scenes[1].objects.push({...item});
+        }
         else delete item.action;
+      }
+      if (strictGroup && mode >= 10) {
+        const choice=groupChoice('{}'), calls=choice.message.tool_calls;
+        if(mode===10)delete choice.message.tool_calls;
+        if(mode===11)calls[0].function.name=marker;
+        if(mode===12)calls.push({...calls[0]});
+        if(mode===13)choice.finish_reason='length';
+        if(mode===14){respond(400,marker);return;}
+        respond(200,JSON.stringify({choices:[choice]}));return;
       }
       if (mode === 7) for (const scene of content.scenes) scene.objects[0][marker] = marker;
     }
-    respond(200,JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify(content)}}]}));return;
+    respond(200,JSON.stringify({choices:[strictGroup?groupChoice(JSON.stringify(content)):{finish_reason:'stop',message:{content:JSON.stringify(content)}}]}));return;
   }
   models++; stats(); assert.ok(models <= 2);
   if (scenario === 'admin') { assert.equal(body.model, 'fixture-compatible'); assert.equal(body.max_completion_tokens, 8192); assert.equal('thinking' in body, false); }

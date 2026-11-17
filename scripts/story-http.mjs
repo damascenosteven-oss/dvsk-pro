@@ -8,6 +8,7 @@ import os from 'node:os';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium } from 'playwright-core';
 
+const compatible=process.argv.includes('--compatible');
 const root=await mkdtemp(path.join(os.tmpdir(),'dvsk-story-test-'));
 const port=Number(process.env.STORY_TEST_PORT||3487),base='http://127.0.0.1:'+port;
 const chrome=[process.env.PPT_CHROME_PATH,'/usr/bin/google-chrome','/usr/bin/chromium','C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(x=>x&&existsSync(x));
@@ -16,7 +17,7 @@ const fixture=new URL('../deploy/test/outline-entry-fixture.mjs',import.meta.url
 const server=spawn(process.execPath,['--import',fixture,'node_modules/next/dist/bin/next','start','-H','127.0.0.1','-p',String(port)],{env:{...process.env,
  OUTLINE_FIXTURE_CASE:'story',PPT_MODEL_SETTINGS_DIR:path.join(root,'no-saved-settings'),PPT_STORY_DRAFTS_DIR:path.join(root,'private-drafts'),
  PPT_CHROME_PATH:chrome,PPT_INVITE_PASSWORD:'fixture-invite',PPT_SESSION_SECRET:'fixture-session-secret-for-http-test',
- DEEPSEEK_API_KEY:'fixture-key',DEEPSEEK_MODEL:'deepseek-flash',DEEPSEEK_BASE_URL:'https://api.deepseek.com',
+ DEEPSEEK_API_KEY:'fixture-key',DEEPSEEK_MODEL:'deepseek-flash',DEEPSEEK_BASE_URL:compatible?'https://fixture-model.example/v1':'https://api.deepseek.com',
  COS_BUCKET:'fixture-bucket',COS_REGION:'ap-shanghai',COS_SECRET_ID:'fixture-id',COS_SECRET_KEY:'fixture-secret',
 },stdio:['ignore','pipe','pipe']});
 let log='';for(const stream of [server.stdout,server.stderr])stream.on('data',chunk=>{log=(log+chunk).slice(-60000)});
@@ -31,14 +32,19 @@ try{
   assert.equal(outline.status(),200);
   const {id,plan}=await outline.json();
   for(const [index,stage,path,rule] of [
-    [0,'envelope','choices','missing'],[1,'body','content','invalid_json'],
+    [0,'envelope','choices','missing'],[1,'body',compatible?'content':'arguments','invalid_json'],
     [2,'list','scenes','missing'],[3,'list','scenes','count'],
     [4,'scene','scenes[2].objects[1].action','missing'],
-    [5,'scene','scenes[2].objects[1].action','unsupported'],
+    [5,'scene','scenes[1].objects[1].action','unsupported'],
     [6,'scene','scenes[0].objects[0]','unknown_field'],
     [7],[8,'scene','scenes[2].objects[1].action','missing'],
+    ...(compatible?[]:[
+      [9,'envelope','tool_calls','missing'],[10,'envelope','tool_calls[0].function.name','unsupported'],
+      [11,'envelope','tool_calls','too_big'],[12,'envelope','finish_reason','truncated'],
+      [13,'upstream','response','rejected'],
+    ]),
   ]){
-    const completed=index===8?10:0;
+    const completed=index>=8?10:0;
     const res=await post({op:'step',id,completed,plan});
     if(index===7){assert.equal(res.status(),200);assert.equal((await res.json()).completed,10);continue}
     assert.equal(res.status(),502);
@@ -52,17 +58,18 @@ try{
     assert.equal(event.issues[0].path,path);
     assert.equal(event.issues[0].rule,rule);
     if(index===3)assert.match(error,/预期 10.*实际 9/);
-    if([4,5,8].includes(index))assert.ok(error.includes('第 '+(completed+3)+' 页第 2 个对象'));
+    if(index===5){assert.ok(error.includes('第 2 页第 2 个对象'));assert.deepEqual(event.issues.map(x=>[x.path,x.page,x.object]),[['scenes[1].objects[1].action',2,2],['scenes[2].objects[1].action',3,2]])}
+    if([4,8].includes(index))assert.ok(error.includes('第 '+(completed+3)+' 页第 2 个对象'));
     if(index===6){assert.equal(event.issues.length,5);assert.equal(event.omitted,5)}
     assert.ok(!(log+error).includes('PRIVATE_DRAFT_BODY_SENTINEL'));
     const saved=await (await post({op:'read',id})).json();
     assert.equal(saved.completed,completed);assert.equal(saved.code,undefined);
   }
-  assert.equal((log.match(/STORY_CALL /g)||[]).length,10);
+  assert.equal((log.match(/STORY_CALL /g)||[]).length,compatible?10:15);
   const loginState=await diagnostics.storageState();
   await diagnostics.close();console.log('PASS group failures and durable progress');
   const normalStart=log.length;
-  for(const n of [6,12,13,21,30]){
+  for(const n of (compatible?[6]:[6,12,13,21,30])){
     const ctx=await browser.newContext({viewport:{width:1280,height:800},reducedMotion:'reduce'}),tab=await ctx.newPage();
     const bad=await ctx.request.post(base+'/api/ppt/story',{data:{op:'read',id:'not-a-uuid'}});assert.equal(bad.status(),401);
     if(n===6)await ctx.addCookies(loginState.cookies);
@@ -73,7 +80,7 @@ try{
     await tab.getByLabel('讲述重点',{exact:true}).first().fill('先记录客户诉求，交给唯一负责人');
     await tab.getByRole('button',{name:'确认大纲并制作整套'}).click();
     if(n===21){
-      await tab.getByRole('alert').filter({hasText:'当前分组未完成'}).waitFor({timeout:120000});await tab.getByRole('button',{name:'继续制作'}).waitFor();await tab.reload();await tab.getByText(/已完成 10 \/ 21 页/).waitFor();
+      await tab.getByRole('alert').filter({hasText:'第 11～20 页未完成'}).waitFor({timeout:120000});await tab.getByRole('button',{name:'继续制作'}).waitFor();await tab.reload();await tab.getByText(/已完成 10 \/ 21 页/).waitFor();
       await tab.getByRole('button',{name:'继续制作'}).click();
     }
     const share=tab.getByRole('link',{name:/播放与分享/});await share.waitFor({timeout:180000});

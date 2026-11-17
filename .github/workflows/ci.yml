@@ -26,3 +26,5 @@ jobs:
       - run: pnpm build
       - name: Generate one creative deck through the actual browser, model and storage fixtures
         run: node scripts/story-http.mjs
+      - name: Verify a compatible model through the original JSON protocol
+        run: node scripts/story-http.mjs --compatible

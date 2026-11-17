@@ -169,6 +169,14 @@
         "approval_source": "Owner: PLEASE IMPLEMENT THIS PLAN, DVSK Pro, 2026-11-12",
         "plan_sha256": "c85376a9219360c8f9d799841736d0bafa1076ee08e08ad3154a10166deaabb3",
         "adr_sha256": "931021fd8d5a5dc1a20d945f1b87be656dc0664e615ba600544bf6e582ce4882"
+      },
+      "11": {
+        "url": "https://github.com/damascenosteven-oss/dvsk-pro/issues/11",
+        "plan": "docs/plans/issue-11-strict-scenes.md",
+        "adr": "docs/adr/0018-strict-scenes.md",
+        "approval_source": "Owner approved strict DeepSeek group tool protocol and implementation in this conversation.",
+        "plan_sha256": "a9baf24d8603d4624846322152ca93451e147f41a4a5e4c4f21ad764cb3f91c5",
+        "adr_sha256": "24050f96b44870f34b19c56a07c34252e4de285f76968b72b79be3d2ca483986"
       }
     }
   }
