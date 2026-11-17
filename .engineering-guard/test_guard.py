@@ -14,7 +14,7 @@ POLICY = ROOT / ".engineering-guard/policy.json"
 
 
 class Fixture:
-    def __init__(self, approved=True, source=None, issue="9"):
+    def __init__(self, approved=True, source=None, issue="9", historical=True):
         self.issue = issue
         self.branch = f"issue/{issue}-engineering-guard"
         self.temp = tempfile.TemporaryDirectory(prefix="yuling-guard-test-")
@@ -26,6 +26,10 @@ class Fixture:
         self.script.write_bytes(CHECKER.read_bytes() if source is None else source)
         self.policy = json.loads(POLICY.read_text(encoding="utf-8"))
         self.policy["checker_sha256"] = hashlib.sha256(self.script.read_bytes()).hexdigest()
+        if issue == "9" and historical:
+            self.policy["lifecycle"]["issues"]["9"] = json.loads(
+                (ROOT / ".engineering-guard/legacy-yuling-issue-9.json").read_text(encoding="utf-8"))
+        approved_issue = self.policy["lifecycle"]["issues"][issue]
         if not approved:
             self.policy["lifecycle"]["issues"] = {}
         self.policy_file = self.root / "policy.json"
@@ -39,7 +43,6 @@ class Fixture:
         self.git("commit", "-m", "fixture base")
         self.base = self.git("rev-parse", "HEAD").stdout.strip()
         self.git("checkout", "-b", self.branch)
-        approved_issue = json.loads(POLICY.read_text(encoding="utf-8"))["lifecycle"]["issues"][issue]
         for name in filter(None, (approved_issue["plan"], approved_issue.get("adr"))):
             file = self.repo / name
             file.parent.mkdir(parents=True, exist_ok=True)
@@ -105,6 +108,14 @@ class GuardEntries(unittest.TestCase):
     def rejected(self, result, reason):
         self.assertNotEqual(result.returncode, 0, "Invalid source was accepted")
         self.assertIn(reason, result.stderr)
+
+    def test_current_issue_9_rejects_imported_approval(self):
+        f = self.fixture(historical=False)
+        self.assertEqual(f.precommit().returncode, 0)
+        name = f.policy["lifecycle"]["issues"]["9"]["plan"]
+        (f.repo / name).write_bytes((ROOT / "docs/plans/issue-9-engineering-guard.md").read_bytes())
+        f.git("add", name)
+        self.rejected(f.precommit(), "plan/base mismatch")
 
     def test_snapshot_hash_and_frozen_policy(self):
         policy = json.loads(POLICY.read_text(encoding="utf-8"))

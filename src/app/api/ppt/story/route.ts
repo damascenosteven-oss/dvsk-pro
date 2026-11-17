@@ -5,6 +5,8 @@ import { clientAddress, consumeRateLimit } from '@/lib/ppt/rate-limit';
 import { briefSchema, planSchema } from '@/lib/ppt/storyboard';
 import { readStory, startStory, stepStory, StoryError } from '@/lib/ppt/story-job';
 
+import { GroupFormatError } from '@/lib/ppt/group-feedback';
+
 export const runtime='nodejs';
 const command=z.discriminatedUnion('op',[
   briefSchema.extend({op:z.literal('outline')}),
@@ -28,6 +30,11 @@ export async function POST(req:NextRequest){
   }catch(e){
     if(e instanceof StoryError)return NextResponse.json({error:e.message},{status:e.status});
     const requestId=crypto.randomUUID();
+    if(e instanceof GroupFormatError){
+      console.error('story_failed '+JSON.stringify({requestId,operation:c.op,kind:'schema',stage:e.stage,
+        ...e.range,completed:e.range.first-1,issues:e.issues,omitted:e.omitted,...e.counts}));
+      return NextResponse.json({error:e.feedback(requestId)},{status:502});
+    }
     console.error('story_failed',{requestId,operation:c.op,completed:c.op==='step'?c.completed:undefined,kind:e instanceof z.ZodError?'schema':e instanceof Error?e.name:'unknown'});
     const msg=c.op==='step'?'当前分组未完成。已保存的页可以继续使用，请查看进度后继续。':'未能读取或生成大纲，请检查模型配置后重试。';
     return NextResponse.json({error:msg+'（'+requestId.slice(0,8)+'）'},{status:502});

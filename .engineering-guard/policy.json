@@ -11,12 +11,10 @@
     "grandfathered": {},
     "issues": {
       "9": {
-        "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/9",
-        "approval_source": "Owner explicitly requested implementation of the accepted standalone engineering-guard plan in this Codex conversation on 2026-10-26; no merge or deployment authority.",
-        "plan": "docs/plans/issue-9-engineering-guard.md",
-        "plan_sha256": "53aa1b669e12bdbba341eda76db7280427e04af4216ba288f6fe2a38da5e2577",
-        "adr": "docs/adr/0003-engineering-guard.md",
-        "adr_sha256": "bb59bc220439e93df29d8be6f1e755d3241e7331e25dd7fb12289b4781e99271"
+        "url": "https://github.com/damascenosteven-oss/dvsk-pro/issues/9",
+        "plan": "docs/plans/issue-9-group-feedback.md",
+        "plan_sha256": "22289b5cae9cc560a15ebf693e0c296854fe42158d8c02b454b837e9eb731b73",
+        "approval_source": "Owner approved the DVSK Pro group format feedback plan and isolation of the legacy Issue 9 receipt in this conversation. Owner separately approved the exact Next.js 16.4.5 patch in PR 10."
       },
       "8": {
         "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/8",

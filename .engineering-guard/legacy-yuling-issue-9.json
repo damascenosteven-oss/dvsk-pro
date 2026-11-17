@@ -1,0 +1,8 @@
+{
+  "url": "https://github.com/damascenosteven-oss/YULING-mini-app/issues/9",
+  "approval_source": "Owner explicitly requested implementation of the accepted standalone engineering-guard plan in this Codex conversation on 2026-10-26; no merge or deployment authority.",
+  "plan": "docs/plans/issue-9-engineering-guard.md",
+  "plan_sha256": "53aa1b669e12bdbba341eda76db7280427e04af4216ba288f6fe2a38da5e2577",
+  "adr": "docs/adr/0003-engineering-guard.md",
+  "adr_sha256": "bb59bc220439e93df29d8be6f1e755d3241e7331e25dd7fb12289b4781e99271"
+}
