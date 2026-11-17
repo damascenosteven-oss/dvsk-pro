@@ -1,15 +1,16 @@
 import { z } from 'zod';
 
 export type GroupRange = {first:number; last:number};
-type Stage = 'envelope' | 'body' | 'list' | 'scene';
+type Stage = 'envelope' | 'body' | 'list' | 'scene' | 'upstream';
 type Rule = keyof typeof rules;
 const rules = {
+  rejected:'模型服务拒绝了分组请求', truncated:'分镜输出被截断',
   missing:'缺少必填字段', unsupported:'取值不受支持', unknown_field:'存在未支持字段',
   count:'页数不符', invalid_json:'无法解析 JSON', type:'字段类型不符',
   too_small:'低于允许下限', too_big:'超出允许上限', format:'字段格式不符',
 };
 type Finding = {path:string; rule:Rule; page?:number; object?:number};
-const names = new Set('choices message content finish_reason scenes page background transition objects id kind text x y w h color size action beat'.split(' '));
+const names = new Set('choices message tool_calls function name type arguments content finish_reason scenes page background transition objects id kind text x y w h color size action beat'.split(' '));
 
 export class GroupFormatError extends Error {
   constructor(readonly range:GroupRange, readonly stage:Stage, readonly issues:Finding[],

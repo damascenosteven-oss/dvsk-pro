@@ -15,15 +15,17 @@ export const planSchema=z.object({
   })).min(6).max(30),
 });
 export type StoryPlan=z.infer<typeof planSchema>;
+export const sceneActions=['appear','rise','draw','travel','pulse'] as const;
+export const pageTransitions=['fade','slide','carry'] as const;
 const obj=z.object({
   id:z.string().regex(/^[a-z][a-z0-9_-]{0,31}$/),kind:z.enum(['text','number','box','circle','line']),
   text:z.string().max(120),x:z.number().min(0).max(100),y:z.number().min(0).max(100),
   w:z.number().min(1).max(100),h:z.number().min(1).max(100),color,
-  size:z.number().min(1.8).max(12),action:z.enum(['appear','rise','draw','travel','pulse']),
+  size:z.number().min(1.8).max(12),action:z.enum(sceneActions),
   beat:z.number().int().min(0).max(5),
 }).strict();
 const sceneSchema=z.object({page:z.number().int().min(1).max(30),background:z.enum(['paper','ink','mist']),
-  transition:z.enum(['fade','carry','slide']),objects:z.array(obj).min(1).max(14)}).strict();
+  transition:z.enum(pageTransitions),objects:z.array(obj).min(1).max(14)}).strict();
 export type Scene=z.infer<typeof sceneSchema>;
 export function groupRange(total:number,completed:number):[number,number]{
   if(!Number.isInteger(total)||total<6||total>30||!Number.isInteger(completed)||completed<0||completed>=total)throw Error('分组页数无效');
