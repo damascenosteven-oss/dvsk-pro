@@ -14,7 +14,8 @@ const names = new Set('choices message tool_calls function name type arguments c
 
 export class GroupFormatError extends Error {
   constructor(readonly range:GroupRange, readonly stage:Stage, readonly issues:Finding[],
-    readonly omitted=0, readonly counts?:{expected:number;actual:number}) {
+    readonly omitted=0, readonly counts?:{expected:number;actual:number},
+    readonly argumentJson?:{reason:'empty'|'unfinished'|'syntax'; length:number; offset:number|null}) {
     super('Group format validation failed');
   }
   feedback(requestId:string) {
@@ -24,6 +25,7 @@ export class GroupFormatError extends Error {
     const field=issue.path.endsWith('.action')?'动画动作':issue.path;
     const explanation=issue.rule==='missing'?'缺少'+field:field+' '+rules[issue.rule];
     const detail=this.counts ? '页数不符，预期 '+this.counts.expected+'、实际 '+this.counts.actual :
+      this.argumentJson ? ({empty:'模型返回的分镜参数为空',unfinished:'分镜参数在 JSON 结构写完前结束',syntax:'分镜参数的 JSON 格式有误'}[this.argumentJson.reason]) :
       this.stage==='body' ? '模型正文无法解析 JSON' : location+explanation;
     return '第 '+first+'～'+last+' 页未完成：'+detail+'。已保存 '+(first-1)+' 页，可继续本组。（'+requestId+'）';
   }

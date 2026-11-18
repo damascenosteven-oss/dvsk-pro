@@ -151,6 +151,10 @@ https.request = function (input, options, callback) {
       const mode = ++feedbackCall;
       if (mode === 1) { respond(200, '{}'); return; }
       if (mode === 2) { respond(200, JSON.stringify({choices:[strictGroup?groupChoice('{'+marker):{message:{content:'{'+marker}}]})); return; }
+      if (strictGroup && mode >= 15 && mode <= 20) {
+        const samples=['',' \t\n','{"scenes":','{"text":"未结束','{"text":@PRIVATE_DRAFT_BODY_SENTINEL}','{"text":"😀"} extra'];
+        respond(200,JSON.stringify({choices:[groupChoice(samples[mode-15])]}));return;
+      }
       if (mode === 3) content = {};
       if (mode === 4) content.scenes.pop();
       if ([5,6,9].includes(mode)) {
