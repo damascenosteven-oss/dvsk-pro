@@ -32,7 +32,7 @@ export async function POST(req:NextRequest){
     const requestId=crypto.randomUUID();
     if(e instanceof GroupFormatError){
       console.error('story_failed '+JSON.stringify({requestId,operation:c.op,kind:e.stage==='upstream'?'upstream':'schema',stage:e.stage,
-        ...e.range,completed:e.range.first-1,issues:e.issues,omitted:e.omitted,...e.counts}));
+        ...e.range,completed:e.range.first-1,issues:e.issues,omitted:e.omitted,...e.counts,...(e.argumentJson?{argumentJson:e.argumentJson}:{})}));
       return NextResponse.json({error:e.feedback(requestId)},{status:502});
     }
     console.error('story_failed',{requestId,operation:c.op,completed:c.op==='step'?c.completed:undefined,kind:e instanceof z.ZodError?'schema':e instanceof Error?e.name:'unknown'});

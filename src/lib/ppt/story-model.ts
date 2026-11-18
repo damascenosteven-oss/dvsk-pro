@@ -37,7 +37,18 @@ async function jsonRequest(instructions:string,input:unknown,maxTokens:number,ra
     content=choice.message.content;
   }
   try { return JSON.parse(content) as unknown; } catch(error) {
-    if(range && error instanceof SyntaxError)throw new GroupFormatError(range,'body',[{path:strict?'arguments':'content',rule:'invalid_json'}]);
+    if(range && error instanceof SyntaxError){
+      if(strict){
+        const empty=/^[\t\n\r ]*$/.test(content);
+        const message=error.message;
+        const match=message.match(/(?: in JSON at position | in JSON at position | at position )(\d+) \(line \d+ column \d+\)/);
+        const offset=match && Number.isSafeInteger(Number(match[1])) && Number(match[1])<=content.length ? Number(match[1]) : null;
+        const unfinished=!empty && (/^Unexpected end of JSON input$/.test(message) || /^Unterminated string in JSON at position \d+ \(line \d+ column \d+\)$/.test(message) && offset===content.length);
+        throw new GroupFormatError(range,'body',[{path:'arguments',rule:'invalid_json'}],0,undefined,
+          {reason:empty?'empty':unfinished?'unfinished':'syntax',length:content.length,offset});
+      }
+      throw new GroupFormatError(range,'body',[{path:'content',rule:'invalid_json'}]);
+    }
     throw error;
   }
 }

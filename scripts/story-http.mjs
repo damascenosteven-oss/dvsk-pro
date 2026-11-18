@@ -42,6 +42,9 @@ try{
       [9,'envelope','tool_calls','missing'],[10,'envelope','tool_calls[0].function.name','unsupported'],
       [11,'envelope','tool_calls','too_big'],[12,'envelope','finish_reason','truncated'],
       [13,'upstream','response','rejected'],
+      [14,'body','arguments','invalid_json'],[15,'body','arguments','invalid_json'],
+      [16,'body','arguments','invalid_json'],[17,'body','arguments','invalid_json'],
+      [18,'body','arguments','invalid_json'],[19,'body','arguments','invalid_json'],
     ]),
   ]){
     const completed=index>=8?10:0;
@@ -57,6 +60,13 @@ try{
     assert.equal(event.stage,stage);
     assert.equal(event.issues[0].path,path);
     assert.equal(event.issues[0].rule,rule);
+    if(!compatible && index>=14){
+      const expected=['empty','empty','unfinished','unfinished','syntax','syntax'][index-14];
+      assert.equal(event.argumentJson.reason,expected);
+      assert.equal(typeof event.argumentJson.length,'number');
+      assert.equal(event.argumentJson.offset===null||Number.isSafeInteger(event.argumentJson.offset),true);
+      assert.ok(error.includes(({empty:'模型返回的分镜参数为空',unfinished:'分镜参数在 JSON 结构写完前结束',syntax:'分镜参数的 JSON 格式有误'})[expected]));
+    }
     if(index===3)assert.match(error,/预期 10.*实际 9/);
     if(index===5){assert.ok(error.includes('第 2 页第 2 个对象'));assert.deepEqual(event.issues.map(x=>[x.path,x.page,x.object]),[['scenes[1].objects[1].action',2,2],['scenes[2].objects[1].action',3,2]])}
     if([4,8].includes(index))assert.ok(error.includes('第 '+(completed+3)+' 页第 2 个对象'));
@@ -65,7 +75,7 @@ try{
     const saved=await (await post({op:'read',id})).json();
     assert.equal(saved.completed,completed);assert.equal(saved.code,undefined);
   }
-  assert.equal((log.match(/STORY_CALL /g)||[]).length,compatible?10:15);
+  assert.equal((log.match(/STORY_CALL /g)||[]).length,compatible?10:21);
   const loginState=await diagnostics.storageState();
   await diagnostics.close();console.log('PASS group failures and durable progress');
   const normalStart=log.length;
